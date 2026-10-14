@@ -1,0 +1,31 @@
+$ tiger service list
+┌────────────┬────────────┬────────┬─────────────┬───────────┬──────────────────┐
+│ SERVICE ID │    NAME    │ STATUS │    TYPE     │  REGION   │     CREATED      │
+├────────────┼────────────┼────────┼─────────────┼───────────┼──────────────────┤
+│ bcyh6f7tfc │ house-pot  │ READY  │ TIMESCALEDB │ us-east-1 │ 2026-10-03 17:16 │
+│ cygl9rx93h │ stillbench │ READY  │ TIMESCALEDB │ us-east-1 │ 2026-10-05 23:12 │
+└────────────┴────────────┴────────┴─────────────┴───────────┴──────────────────┘
+
+$ tiger db query stillbench -c "SELECT * FROM sensors ORDER BY id;"
+ id │ type │ location 
+────┼──────┼──────────
+ 1  │ a    │ floor    
+ 2  │ a    │ ceiling  
+ 3  │ b    │ floor    
+ 4  │ b    │ ceiling  
+(4 rows)
+
+
+$ tiger db query stillbench -c "SELECT hypertable_name, num_chunks FROM timescaledb_information.hypertables WHERE hypertable_name = 'sensor_data';"
+ hypertable_name │ num_chunks 
+─────────────────┼────────────
+ sensor_data     │ 1          
+(1 row)
+
+
+$ tiger db query stillbench -c "SELECT COUNT(*) AS readings FROM sensor_data;"
+ readings 
+──────────
+ 1156     
+(1 row)
+
